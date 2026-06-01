@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="practiceInfo"
+        class="fixed-bottom bg-light border-top text-center text-muted small py-2">
+    <div class="container">
+        <span>실습 수행 일시: </span>
+        <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+        <span class="mx-2">|</span>
+        <span>학번: 2071403</span>
+        <span class="mx-2">|</span>
+        <span>성명: 권민서</span>
+    </div>
+</footer>
+</body>
+</html>
