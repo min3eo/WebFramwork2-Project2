@@ -59,6 +59,26 @@ public class ProductController {
         return "products/add";
     }
 
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        Product product = productService.findById(id);
+        ProductDto dto = new ProductDto();
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setDescription(product.getDescription());
+        dto.setStock(product.getStock());
+
+        model.addAttribute("product", dto);
+        model.addAttribute("productId", id);
+        return "products/edit";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String update(@PathVariable Long id, @ModelAttribute ProductDto dto) {
+        productService.update(id, dto);
+        return "redirect:/products";
+    }
+
     @PostMapping
     public String save(@ModelAttribute ProductDto dto) {
         productService.save(dto);
