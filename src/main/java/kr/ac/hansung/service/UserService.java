@@ -1,6 +1,7 @@
 package kr.ac.hansung.service;
 
 import kr.ac.hansung.dto.UserDto;
+import kr.ac.hansung.dto.PasswordChangeDto;
 import kr.ac.hansung.entity.Role;
 import kr.ac.hansung.entity.User;
 import kr.ac.hansung.repository.RoleRepository;
@@ -37,5 +38,26 @@ public class UserService {
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Transactional
+    public void changePassword(String email, PasswordChangeDto dto) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("?ъ슜?먮? 李얠쓣 ???놁뒿?덈떎."));
+
+        if (dto.getCurrentPassword() == null
+            || !passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        if (dto.getNewPassword() == null || dto.getNewPassword().length() < 8) {
+            throw new IllegalArgumentException("새 비밀번호는 8자 이상이어야 합니다.");
+        }
+
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new IllegalArgumentException("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
     }
 }
